@@ -12,8 +12,6 @@ db = client["pippodb"]
 pippoCol=db["pippo"]
 
 async def GetFamily(idPippo):
-    lsp=defaultdict(list)
-    countPippo=db.pippo.count_documents()
     lsp= db.pippo.aggregate([
         {
             "$graphLookup":{
@@ -26,18 +24,22 @@ async def GetFamily(idPippo):
             }
          }
         ])
-    #lst=lsp.toArray()
-    #lst=lsp.find()
-    #lsp=defaultdict(list)
-    #lst=await lsp.to_list(5)
-    lst=defaultdict(list)
     async for x in lsp:
-        lst[x.get("ID")].append(x.get("IDChain"))
+        idP=str(x.get("_id"))
+        idChain=x.get("IDChain")
+        #if idP==pippo.get("IDChain"):
+        #    lst[x.get("ID")].append(x.get("IDChain"))
+        if idP==idPippo:
+            lst[x.get("ID")].append(x.get("IDChain"))
+        else:
+            if idChain==idPippo:
+                lst[x.get("ID")].append(x.get("IDChain"))
+            #if x.get("")
+
     for x in lst.items():
         print(x)
-        
-    
+    return lst    
 
-asyncio.get_event_loop().run_until_complete(GetFamily("620eacb8f4c3bc6d240053b8"))
+asyncio.get_event_loop().run_until_complete(GetFamily("620f56842c357ed1ca5c7830"))
 #asyncio.run(GetFamily())
 
