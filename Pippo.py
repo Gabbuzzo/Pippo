@@ -10,7 +10,6 @@ import pymongo
 client = motor.motor_asyncio.AsyncIOMotorClient("mongodb+srv://gabboUser:gabbopsw@cluster0.4ln68.mongodb.net/dbpippo?retryWrites=true&w=majority")
 db = client["pippodb"]
 pippoCol=db["pippo"]
-
 async def GetFamily(idPippo):
     lsp= db.pippo.aggregate([
         {
@@ -24,6 +23,8 @@ async def GetFamily(idPippo):
             }
          }
         ])
+    #pippoobj=pippoCol.find_one({'_id': ObjectId('620f56842c357ed1ca5c7830')})
+    lst=defaultdict(list)
     async for x in lsp:
         idP=str(x.get("_id"))
         idChain=x.get("IDChain")
